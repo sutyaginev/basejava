@@ -19,12 +19,31 @@ public class ArrayStorage {
         size = 0;
     }
 
-    public void save(Resume r) {
-        if (size < 10000) {
-            storage[size] = r;
+    public void update(Resume r) {
+        for (int i = 0; i < size; i++) {
+            if (Objects.equals(storage[i].getUuid(), r.getUuid())) {
+                storage[i] = r;
+                System.out.printf("Резюме с uuid = %s обновлено%n", r.getUuid());
+                return;
+            }
         }
 
-        size++;
+        System.out.printf("В хранилище нет резюме с uuid = %s%n", r.getUuid());
+    }
+
+    public void save(Resume r) {
+        for (int i = 0; i < size; i++) {
+            if (Objects.equals(storage[i].getUuid(), r.getUuid())) {
+                System.out.printf("В хранилище уже есть резюме с uuid = %s%n", r.getUuid());
+                return;
+            }
+        }
+
+        if (size < 10000) {
+            storage[size] = r;
+            size++;
+            System.out.printf("Резюме с uuid = %s сохранено%n", r.getUuid());
+        }
     }
 
     public Resume get(String uuid) {
@@ -34,6 +53,7 @@ public class ArrayStorage {
             }
         }
 
+        System.out.printf("В хранилище нет резюме с uuid = %s%n", uuid);
         return null;
     }
 
@@ -43,8 +63,12 @@ public class ArrayStorage {
                 storage[i] = storage[size - 1];
                 storage[size - 1] = null;
                 size--;
+                System.out.printf("Резюме с uuid = %s удалено%n", uuid);
+                return;
             }
         }
+
+        System.out.printf("В хранилище нет резюме с uuid = %s%n", uuid);
     }
 
     /**
