@@ -19,51 +19,49 @@ public class ArrayStorage {
     }
 
     public void update(Resume resume) {
-        int index = findResumeIndex(resume.getUuid());
+        int index = getIndex(resume.getUuid());
 
         if (index < 0) {
-            System.out.printf("В хранилище нет резюме с uuid = %s%n", resume.getUuid());
+            System.out.printf("В хранилище нет резюме %s%n", resume.getUuid());
         } else {
             storage[index] = resume;
-            System.out.printf("Резюме с uuid = %s обновлено%n", resume.getUuid());
+            System.out.printf("Резюме %s обновлено%n", resume.getUuid());
         }
     }
 
     public void save(Resume resume) {
-        int index = findResumeIndex(resume.getUuid());
-
         if (size >= STORAGE_LIMIT) {
             System.out.println("Хранилище переполнено");
-        } else if (index >= 0) {
-            System.out.printf("В хранилище уже есть резюме с uuid = %s%n", resume.getUuid());
+        } else if (getIndex(resume.getUuid()) >= 0) {
+            System.out.printf("В хранилище уже есть резюме %s%n", resume.getUuid());
         } else {
             storage[size] = resume;
             size++;
-            System.out.printf("Резюме с uuid = %s сохранено%n", resume.getUuid());
+            System.out.printf("Резюме %s сохранено%n", resume.getUuid());
         }
     }
 
     public Resume get(String uuid) {
-        int index = findResumeIndex(uuid);
+        int index = getIndex(uuid);
 
         if (index < 0) {
-            System.out.printf("В хранилище нет резюме с uuid = %s%n", uuid);
+            System.out.printf("В хранилище нет резюме %s%n", uuid);
             return null;
-        } else {
-            return storage[index];
         }
+
+        return storage[index];
     }
 
     public void delete(String uuid) {
-        int index = findResumeIndex(uuid);
+        int index = getIndex(uuid);
 
         if (index < 0) {
-            System.out.printf("В хранилище нет резюме с uuid = %s%n", uuid);
+            System.out.printf("В хранилище нет резюме %s%n", uuid);
         } else {
             storage[index] = storage[size - 1];
             storage[size - 1] = null;
             size--;
-            System.out.printf("Резюме с uuid = %s удалено%n", uuid);
+            System.out.printf("Резюме %s удалено%n", uuid);
         }
     }
 
@@ -78,7 +76,7 @@ public class ArrayStorage {
         return size;
     }
 
-    private int findResumeIndex(String uuid) {
+    private int getIndex(String uuid) {
         for (int i = 0; i < size; i++) {
             if (Objects.equals(storage[i].getUuid(), uuid)) {
                 return i;
