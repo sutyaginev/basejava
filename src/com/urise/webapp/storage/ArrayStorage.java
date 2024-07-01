@@ -8,10 +8,7 @@ import java.util.Objects;
 /**
  * Array based storage for Resumes
  */
-public class ArrayStorage {
-    private static final int STORAGE_LIMIT = 10000;
-    private final Resume[] storage = new Resume[STORAGE_LIMIT];
-    private int size;
+public class ArrayStorage extends AbstractArrayStorage {
 
     public void clear() {
         Arrays.fill(storage, 0, size, null);
@@ -41,17 +38,6 @@ public class ArrayStorage {
         }
     }
 
-    public Resume get(String uuid) {
-        int index = getIndex(uuid);
-
-        if (index < 0) {
-            System.out.printf("В хранилище нет резюме %s%n", uuid);
-            return null;
-        }
-
-        return storage[index];
-    }
-
     public void delete(String uuid) {
         int index = getIndex(uuid);
 
@@ -72,11 +58,7 @@ public class ArrayStorage {
         return Arrays.copyOf(storage, size);
     }
 
-    public int size() {
-        return size;
-    }
-
-    private int getIndex(String uuid) {
+    protected int getIndex(String uuid) {
         for (int i = 0; i < size; i++) {
             if (Objects.equals(storage[i].getUuid(), uuid)) {
                 return i;
