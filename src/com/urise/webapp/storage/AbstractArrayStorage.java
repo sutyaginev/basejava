@@ -17,7 +17,7 @@ public abstract class AbstractArrayStorage implements Storage {
         size = 0;
     }
 
-    public void update(Resume resume) {
+    public final void update(Resume resume) {
         int index = getIndex(resume.getUuid());
 
         if (index < 0) {
@@ -28,20 +28,23 @@ public abstract class AbstractArrayStorage implements Storage {
         }
     }
 
-    public void save(Resume resume) {
+    public final void save(Resume resume) {
+        int index = getIndex(resume.getUuid());
+
         if (size >= STORAGE_LIMIT) {
             System.out.println("Хранилище переполнено");
         } else {
-            if (getIndex(resume.getUuid()) >= 0) {
+            if (index >= 0) {
                 System.out.printf("В хранилище уже есть резюме %s%n", resume.getUuid());
             } else {
-                saveResume(resume);
+                saveResume(resume, index);
+                size++;
                 System.out.printf("Резюме %s сохранено%n", resume.getUuid());
             }
         }
     }
 
-    public Resume get(String uuid) {
+    public final Resume get(String uuid) {
         int index = getIndex(uuid);
 
         if (index < 0) {
@@ -52,7 +55,7 @@ public abstract class AbstractArrayStorage implements Storage {
         return storage[index];
     }
 
-    public void delete(String uuid) {
+    public final void delete(String uuid) {
         int index = getIndex(uuid);
 
         if (index < 0) {
@@ -60,6 +63,8 @@ public abstract class AbstractArrayStorage implements Storage {
         } else {
             // для array и sorted array будут разные реализации удаления
             deleteResume(index);
+            storage[size - 1] = null;
+            size--;
             System.out.printf("Резюме %s удалено%n", uuid);
         }
     }
@@ -77,7 +82,7 @@ public abstract class AbstractArrayStorage implements Storage {
 
     protected abstract int getIndex(String uuid);
 
-    protected abstract void saveResume(Resume resume);
+    protected abstract void saveResume(Resume resume, int index);
 
     protected abstract void deleteResume(int index);
 }
