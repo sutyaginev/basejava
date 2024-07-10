@@ -46,18 +46,16 @@ abstract class AbstractArrayStorageTest {
 
     @Test
     void update() {
-        getNotExist();
-        storage.update(resume1);
-        Assertions.assertSame(resume1, storage.get(UUID_1));
+        Resume newResume1 = new Resume(UUID_1);
+        storage.update(newResume1);
+        Assertions.assertSame(newResume1, storage.get(UUID_1));
     }
 
     @Test
     void save() {
-        saveExist();
         storage.save(resume4);
         assertGet(resume4);
         assertSize(4);
-        overflow();
     }
 
     @Test
@@ -67,7 +65,8 @@ abstract class AbstractArrayStorageTest {
         });
     }
 
-    void overflow() {
+    @Test
+    void saveOverflow() {
         storage.clear();
 
         for (int i = 0; i < AbstractArrayStorage.STORAGE_LIMIT; i++) {
@@ -108,6 +107,9 @@ abstract class AbstractArrayStorageTest {
     void delete() {
         storage.delete(UUID_1);
         assertSize(2);
+        Assertions.assertThrows(NotExistStorageException.class, () -> {
+            storage.get(UUID_1);
+        });
     }
 
     @Test
