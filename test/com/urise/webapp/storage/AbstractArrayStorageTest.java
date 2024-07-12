@@ -10,7 +10,6 @@ import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.UUID;
 
 abstract class AbstractArrayStorageTest {
 
@@ -20,21 +19,29 @@ abstract class AbstractArrayStorageTest {
     private static final String UUID_2 = "uuid2";
     private static final String UUID_3 = "uuid3";
     private static final String UUID_4 = "uuid4";
-    private static final Resume resume1 = new Resume(UUID_1);
-    private static final Resume resume2 = new Resume(UUID_2);
-    private static final Resume resume3 = new Resume(UUID_3);
-    private static final Resume resume4 = new Resume(UUID_4);
 
-    public AbstractArrayStorageTest(Storage storage) {
+    private static final Resume RESUME_1;
+    private static final Resume RESUME_2;
+    private static final Resume RESUME_3;
+    private static final Resume RESUME_4;
+
+    static {
+        RESUME_1 = new Resume(UUID_1);
+        RESUME_2 = new Resume(UUID_2);
+        RESUME_3 = new Resume(UUID_3);
+        RESUME_4 = new Resume(UUID_4);
+    }
+
+    protected AbstractArrayStorageTest(Storage storage) {
         this.storage = storage;
     }
 
     @BeforeEach
     public void setUp() throws Exception {
         storage.clear();
-        storage.save(resume1);
-        storage.save(resume2);
-        storage.save(resume3);
+        storage.save(RESUME_1);
+        storage.save(RESUME_2);
+        storage.save(RESUME_3);
     }
 
     @Test
@@ -52,16 +59,23 @@ abstract class AbstractArrayStorageTest {
     }
 
     @Test
+    void updateNotExist() {
+        Assertions.assertThrows(NotExistStorageException.class, () -> {
+            storage.get("dummy");
+        });
+    }
+
+    @Test
     void save() {
-        storage.save(resume4);
-        assertGet(resume4);
+        storage.save(RESUME_4);
+        assertGet(RESUME_4);
         assertSize(4);
     }
 
     @Test
     void saveExist() {
         Assertions.assertThrows(ExistStorageException.class, () -> {
-            storage.save(resume1);
+            storage.save(RESUME_1);
         });
     }
 
@@ -69,24 +83,21 @@ abstract class AbstractArrayStorageTest {
     void saveOverflow() {
         storage.clear();
 
-        for (int i = 0; i < AbstractArrayStorage.STORAGE_LIMIT; i++) {
-            try {
-                saveRandomResume();
-            } catch (StorageException e) {
-                Assertions.fail("Overflow occurred ahead of time");
+        try {
+            for (int i = 0; i < AbstractArrayStorage.STORAGE_LIMIT; i++) {
+                storage.save(new Resume());
             }
+        } catch (StorageException e) {
+            Assertions.fail("Overflow occurred ahead of time");
         }
 
-        Assertions.assertThrows(StorageException.class, this::saveRandomResume);
-    }
-
-    void saveRandomResume() {
-        storage.save(new Resume(UUID.randomUUID().toString()));
+        Assertions.assertThrows(StorageException.class, () -> {
+            storage.save(new Resume());
+        });
     }
 
     @Test
     void get() {
-        getNotExist();
         assertGet(storage.get(UUID_1));
         assertGet(storage.get(UUID_2));
         assertGet(storage.get(UUID_3));
@@ -113,12 +124,19 @@ abstract class AbstractArrayStorageTest {
     }
 
     @Test
+    void deleteNotExist() {
+        Assertions.assertThrows(NotExistStorageException.class, () -> {
+            storage.delete("dummy");
+        });
+    }
+
+    @Test
     void getAll() {
         List<Resume> allResumes = Arrays.asList(storage.getAll());
         Assertions.assertEquals(3, allResumes.size());
-        Assertions.assertTrue(allResumes.contains(storage.get(UUID_1)));
-        Assertions.assertTrue(allResumes.contains(storage.get(UUID_2)));
-        Assertions.assertTrue(allResumes.contains(storage.get(UUID_3)));
+        Assertions.assertTrue(allResumes.contains(RESUME_1));
+        Assertions.assertTrue(allResumes.contains(RESUME_2));
+        Assertions.assertTrue(allResumes.contains(RESUME_3));
     }
 
     @Test
