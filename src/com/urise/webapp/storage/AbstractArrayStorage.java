@@ -1,7 +1,6 @@
 package com.urise.webapp.storage;
 
 import com.urise.webapp.exception.ExistStorageException;
-import com.urise.webapp.exception.NotExistStorageException;
 import com.urise.webapp.exception.StorageException;
 import com.urise.webapp.model.Resume;
 
@@ -10,7 +9,7 @@ import java.util.Arrays;
 /**
  * Array based storage for Resumes
  */
-public abstract class AbstractArrayStorage implements Storage {
+public abstract class AbstractArrayStorage extends AbstractStorage {
 
     protected static final int STORAGE_LIMIT = 10000;
     protected final Resume[] storage = new Resume[STORAGE_LIMIT];
@@ -19,52 +18,6 @@ public abstract class AbstractArrayStorage implements Storage {
     public void clear() {
         Arrays.fill(storage, 0, size, null);
         size = 0;
-    }
-
-    public final void update(Resume resume) {
-        int index = getIndex(resume.getUuid());
-
-        if (index < 0) {
-            throw new NotExistStorageException(resume.getUuid());
-        } else {
-            storage[index] = resume;
-        }
-    }
-
-    public final void save(Resume resume) {
-        int index = getIndex(resume.getUuid());
-
-        if (size >= STORAGE_LIMIT) {
-            throw new StorageException("Storage overflow", resume.getUuid());
-        } else if (index >= 0) {
-            throw new ExistStorageException(resume.getUuid());
-        } else {
-            insertElement(resume, index);
-            size++;
-        }
-    }
-
-    public final Resume get(String uuid) {
-        int index = getIndex(uuid);
-
-        if (index < 0) {
-            throw new NotExistStorageException(uuid);
-        }
-
-        return storage[index];
-    }
-
-    public final void delete(String uuid) {
-        int index = getIndex(uuid);
-
-        if (index < 0) {
-            throw new NotExistStorageException(uuid);
-        } else {
-            // для array и sorted array будут разные реализации удаления
-            fillDeletedElement(index);
-            storage[size - 1] = null;
-            size--;
-        }
     }
 
     /**
@@ -78,9 +31,32 @@ public abstract class AbstractArrayStorage implements Storage {
         return size;
     }
 
-    protected abstract int getIndex(String uuid);
+    @Override
+    protected void updateElement(int index, Resume resume) {
+        storage[index] = resume;
+    }
 
-    protected abstract void insertElement(Resume resume, int index);
+    @Override
+    protected Resume getElement(int index) {
+        return storage[index];
+    }
 
-    protected abstract void fillDeletedElement(int index);
+    @Override
+    protected void decreaseSize() {
+        storage[size - 1] = null;
+        size--;
+    }
+
+    @Override
+    protected void increaseSize() {
+        size++;
+    }
+
+    protected void handleExistingErrors(int index, Resume resume) {
+        if (size >= STORAGE_LIMIT) {
+            throw new StorageException("Storage overflow", resume.getUuid());
+        } else if (index >= 0) {
+            throw new ExistStorageException(resume.getUuid());
+        }
+    }
 }
