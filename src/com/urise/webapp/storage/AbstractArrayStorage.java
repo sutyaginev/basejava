@@ -1,6 +1,5 @@
 package com.urise.webapp.storage;
 
-import com.urise.webapp.exception.ExistStorageException;
 import com.urise.webapp.exception.StorageException;
 import com.urise.webapp.model.Resume;
 
@@ -20,6 +19,29 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
         size = 0;
     }
 
+    public void doUpdate(Object searchKey, Resume resume) {
+        storage[(int) searchKey] = resume;
+    }
+
+    public void doSave(Object searchKey, Resume resume) {
+        if (size >= STORAGE_LIMIT) {
+            throw new StorageException("Storage overflow", resume.getUuid());
+        } else {
+            insertElement((int) searchKey, resume);
+            size++;
+        }
+    }
+
+    public Resume doGet(Object searchKey) {
+        return storage[(int) searchKey];
+    }
+
+    protected void doDelete(Object searchKey) {
+        fillDeletedElement((int) searchKey);
+        storage[size - 1] = null;
+        size--;
+    }
+
     /**
      * @return array, contains only Resumes in storage (without null)
      */
@@ -32,31 +54,12 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
     }
 
     @Override
-    protected void updateElement(int index, Resume resume) {
-        storage[index] = resume;
+    protected boolean isExist(Object searchKey) {
+        return (int) searchKey >= 0;
     }
 
-    @Override
-    protected Resume getElement(int index) {
-        return storage[index];
-    }
+    protected abstract void insertElement(int index, Resume resume);
 
-    @Override
-    protected void decreaseSize() {
-        storage[size - 1] = null;
-        size--;
-    }
+    protected abstract void fillDeletedElement(int index);
 
-    @Override
-    protected void increaseSize() {
-        size++;
-    }
-
-    protected void handleExistingErrors(int index, Resume resume) {
-        if (size >= STORAGE_LIMIT) {
-            throw new StorageException("Storage overflow", resume.getUuid());
-        } else if (index >= 0) {
-            throw new ExistStorageException(resume.getUuid());
-        }
-    }
 }

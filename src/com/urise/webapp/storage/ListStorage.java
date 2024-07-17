@@ -1,6 +1,5 @@
 package com.urise.webapp.storage;
 
-import com.urise.webapp.exception.ExistStorageException;
 import com.urise.webapp.model.Resume;
 
 import java.util.ArrayList;
@@ -12,6 +11,26 @@ public class ListStorage extends AbstractStorage {
 
     public void clear() {
         storage.clear();
+    }
+
+    @Override
+    protected void doUpdate(Object searchKey, Resume resume) {
+        storage.set((int) searchKey, resume);
+    }
+
+    @Override
+    protected void doSave(Object searchKey, Resume resume) {
+        storage.add(resume);
+    }
+
+    @Override
+    protected Resume doGet(Object searchKey) {
+        return storage.get((int) searchKey);
+    }
+
+    @Override
+    protected void doDelete(Object searchKey) {
+        storage.remove((int) searchKey);
     }
 
     public Resume[] getAll() {
@@ -28,35 +47,8 @@ public class ListStorage extends AbstractStorage {
         return storage.indexOf(searchKey);
     }
 
-    protected void insertElement(Resume resume, int index) {
-        storage.add(resume);
-    }
-
     @Override
-    protected void fillDeletedElement(int index) {
-        storage.remove(index);
-    }
-
-    @Override
-    protected void updateElement(int index, Resume resume) {
-        storage.set(index, resume);
-    }
-
-    @Override
-    protected Resume getElement(int index) {
-        return storage.get(index);
-    }
-
-    @Override
-    protected void decreaseSize() {}
-
-    @Override
-    protected void increaseSize() {}
-
-    @Override
-    protected void handleExistingErrors(int index, Resume resume) {
-        if (index >= 0) {
-            throw new ExistStorageException(resume.getUuid());
-        }
+    protected boolean isExist(Object searchKey) {
+        return (int) searchKey >= 0;
     }
 }
