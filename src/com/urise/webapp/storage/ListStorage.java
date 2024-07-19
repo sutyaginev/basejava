@@ -4,6 +4,7 @@ import com.urise.webapp.model.Resume;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class ListStorage extends AbstractStorage {
 
@@ -42,9 +43,14 @@ public class ListStorage extends AbstractStorage {
     }
 
     @Override
-    protected int getIndex(String uuid) {
-        Resume searchKey = new Resume(uuid);
-        return storage.indexOf(searchKey);
+    protected Integer getSearchKey(String uuid) {
+        for (int i = 0; i < size(); i++) {
+            if (Objects.equals(storage.get(i).getUuid(), uuid)) {
+                return i;
+            }
+        }
+
+        return -1;
     }
 
     @Override
