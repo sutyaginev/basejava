@@ -49,7 +49,9 @@ public abstract class AbstractStorage implements Storage {
         throw new ExistStorageException(uuid);
     }
 
-    protected List<Resume> getListSortedByFullNameAndUuid(List<Resume> resumes) {
+    @Override
+    public List<Resume> getAllSorted() {
+        List<Resume> resumes = getAllResumes();
         resumes.sort(Comparator.comparing(Resume::getFullName).thenComparing(Resume::getUuid));
         return resumes;
     }
@@ -65,4 +67,6 @@ public abstract class AbstractStorage implements Storage {
     protected abstract Object getSearchKey(String uuid);
 
     protected abstract boolean isExist(Object searchKey);
+
+    protected abstract List<Resume> getAllResumes();
 }
