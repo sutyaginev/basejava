@@ -12,11 +12,11 @@ public class Resume implements Comparable<Resume> {
     private final String fullName;
 
     public Resume() {
-        this(UUID.randomUUID().toString(), "Noname");
+        this(UUID.randomUUID().toString(), "");
     }
 
     public Resume(String uuid) {
-        this(uuid, "Noname");
+        this(uuid, "");
     }
 
     public Resume(String uuid, String fullName) {

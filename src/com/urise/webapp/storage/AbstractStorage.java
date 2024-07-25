@@ -9,6 +9,8 @@ import java.util.List;
 
 public abstract class AbstractStorage implements Storage {
 
+    private static final Comparator<Resume> fullNameUuidComparator = Comparator.comparing(Resume::getFullName).thenComparing(Resume::getUuid);
+
     public final void update(Resume resume) {
         Object searchKey = getExistingSearchKey(resume.getUuid());
         doUpdate(searchKey, resume);
@@ -52,7 +54,7 @@ public abstract class AbstractStorage implements Storage {
     @Override
     public List<Resume> getAllSorted() {
         List<Resume> resumes = getAllResumes();
-        resumes.sort(Comparator.comparing(Resume::getFullName).thenComparing(Resume::getUuid));
+        resumes.sort(fullNameUuidComparator);
         return resumes;
     }
 
