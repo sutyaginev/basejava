@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.Arrays;
 import java.util.List;
 
 abstract class AbstractStorageTest {
@@ -24,10 +25,10 @@ abstract class AbstractStorageTest {
     private static final Resume RESUME_4;
 
     static {
-        RESUME_1 = new Resume(UUID_1);
-        RESUME_2 = new Resume(UUID_2);
-        RESUME_3 = new Resume(UUID_3);
-        RESUME_4 = new Resume(UUID_4);
+        RESUME_1 = new Resume(UUID_1, "Name1");
+        RESUME_2 = new Resume(UUID_2, "Name2");
+        RESUME_3 = new Resume(UUID_3, "Name3");
+        RESUME_4 = new Resume(UUID_4, "Name4");
     }
 
     protected AbstractStorageTest(Storage storage) {
@@ -51,7 +52,7 @@ abstract class AbstractStorageTest {
 
     @Test
     void update() {
-        Resume newResume1 = new Resume(UUID_1);
+        Resume newResume1 = new Resume(UUID_1, "New Name");
         storage.update(newResume1);
         Assertions.assertSame(newResume1, storage.get(UUID_1));
     }
@@ -112,12 +113,10 @@ abstract class AbstractStorageTest {
     }
 
     @Test
-    void getAll() {
-        List<Resume> allResumes = storage.getAllSorted();
-        Assertions.assertEquals(3, allResumes.size());
-        Assertions.assertTrue(allResumes.contains(RESUME_1));
-        Assertions.assertTrue(allResumes.contains(RESUME_2));
-        Assertions.assertTrue(allResumes.contains(RESUME_3));
+    void getAllSorted() {
+        List<Resume> list = storage.getAllSorted();
+        Assertions.assertEquals(3, list.size());
+        Assertions.assertEquals(list, Arrays.asList(RESUME_1, RESUME_2, RESUME_3));
     }
 
     @Test
