@@ -7,13 +7,16 @@ public class Period {
 
     private final LocalDate dateFrom;
     private final LocalDate dateTo;
-    private final String position;
+    private final String title;
     private final String description;
 
-    public Period(LocalDate dateFrom, LocalDate dateTo, String position, String description) {
-        this.dateFrom = dateFrom;
-        this.dateTo = dateTo;
-        this.position = position;
+    public Period(LocalDate startDate, LocalDate endDate, String title, String description) {
+        Objects.requireNonNull(startDate, "startDate must not be null");
+        Objects.requireNonNull(endDate, "endDate must not be null");
+        Objects.requireNonNull(title, "title must not be null");
+        this.dateFrom = startDate;
+        this.dateTo = endDate;
+        this.title = title;
         this.description = description;
     }
 
@@ -25,8 +28,8 @@ public class Period {
         return dateTo;
     }
 
-    public String getPosition() {
-        return position;
+    public String getTitle() {
+        return title;
     }
 
     public String getDescription() {
@@ -40,17 +43,17 @@ public class Period {
 
         Period period = (Period) o;
 
-        if (!Objects.equals(dateFrom, period.dateFrom)) return false;
-        if (!Objects.equals(dateTo, period.dateTo)) return false;
-        if (!Objects.equals(position, period.position)) return false;
+        if (!dateFrom.equals(period.dateFrom)) return false;
+        if (!dateTo.equals(period.dateTo)) return false;
+        if (!title.equals(period.title)) return false;
         return Objects.equals(description, period.description);
     }
 
     @Override
     public int hashCode() {
-        int result = dateFrom != null ? dateFrom.hashCode() : 0;
-        result = 31 * result + (dateTo != null ? dateTo.hashCode() : 0);
-        result = 31 * result + (position != null ? position.hashCode() : 0);
+        int result = dateFrom.hashCode();
+        result = 31 * result + dateTo.hashCode();
+        result = 31 * result + title.hashCode();
         result = 31 * result + (description != null ? description.hashCode() : 0);
         return result;
     }
@@ -60,7 +63,7 @@ public class Period {
         return "Period{" +
                 "dateFrom=" + dateFrom +
                 ", dateTo=" + dateTo +
-                ", position='" + position + '\'' +
+                ", position='" + title + '\'' +
                 ", description='" + description + '\'' +
                 '}';
     }

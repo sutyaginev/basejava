@@ -4,14 +4,15 @@ import java.util.Objects;
 
 public class TextSection extends Section {
 
-    private final String description;
+    private final String content;
 
-    public TextSection(String description) {
-        this.description = description;
+    public TextSection(String content) {
+        Objects.requireNonNull(content, "content must not be null");
+        this.content = content;
     }
 
-    public String getDescription() {
-        return description;
+    public String getContent() {
+        return content;
     }
 
     @Override
@@ -21,16 +22,16 @@ public class TextSection extends Section {
 
         TextSection that = (TextSection) o;
 
-        return Objects.equals(description, that.description);
+        return content.equals(that.content);
     }
 
     @Override
     public int hashCode() {
-        return description != null ? description.hashCode() : 0;
+        return content.hashCode();
     }
 
     @Override
     public String toString() {
-        return description;
+        return content;
     }
 }

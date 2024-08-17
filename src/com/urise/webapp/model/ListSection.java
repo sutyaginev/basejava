@@ -5,14 +5,15 @@ import java.util.Objects;
 
 public class ListSection extends Section {
 
-    private final List<String> description;
+    private final List<String> items;
 
-    public ListSection(List<String> description) {
-        this.description = description;
+    public ListSection(List<String> items) {
+        Objects.requireNonNull(items, "items must not be null");
+        this.items = items;
     }
 
-    public List<String> getDescription() {
-        return description;
+    public List<String> getItems() {
+        return items;
     }
 
     @Override
@@ -22,18 +23,18 @@ public class ListSection extends Section {
 
         ListSection that = (ListSection) o;
 
-        return Objects.equals(description, that.description);
+        return items.equals(that.items);
     }
 
     @Override
     public int hashCode() {
-        return description != null ? description.hashCode() : 0;
+        return items.hashCode();
     }
 
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        for (String s : description) {
+        for (String s : items) {
             sb.append("\n- ").append(s);
         }
         return sb.toString();

@@ -9,6 +9,7 @@ public class CompanySection extends Section {
     private final List<Company> companies;
 
     public CompanySection(List<Company> companies) {
+        Objects.requireNonNull(companies, "companies must not be null");
         this.companies = companies;
     }
 
@@ -23,12 +24,12 @@ public class CompanySection extends Section {
 
         CompanySection that = (CompanySection) o;
 
-        return Objects.equals(companies, that.companies);
+        return companies.equals(that.companies);
     }
 
     @Override
     public int hashCode() {
-        return companies != null ? companies.hashCode() : 0;
+        return companies.hashCode();
     }
 
     @Override
@@ -39,7 +40,7 @@ public class CompanySection extends Section {
             sb.append("\n- ").append(company.getName()).append(" (").append(company.getWebsite()).append(")\n  ");
             for (Period period : company.getPeriods()) {
                 sb.append(period.getDateFrom().format(formatter)).append("-").append(period.getDateTo().format(formatter)).
-                        append(" - ").append(period.getPosition()).append("\n  ").append(period.getDescription());
+                        append(": ").append(period.getTitle()).append("\n  ").append(period.getDescription());
             }
         }
         return sb.toString();
