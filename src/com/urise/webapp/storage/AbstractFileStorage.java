@@ -5,6 +5,7 @@ import com.urise.webapp.model.Resume;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -24,6 +25,20 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
         }
 
         this.directory = directory;
+    }
+
+    @Override
+    public void clear() {
+        String[] list = directory.list();
+        if (list != null) {
+            for (String name : list) {
+                try {
+                    doDelete(new File(directory.getCanonicalPath() + "/" + name));
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        }
     }
 
     @Override
@@ -53,7 +68,7 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
 
     @Override
     protected void doDelete(File file) {
-
+        file.delete();
     }
 
     @Override
@@ -68,17 +83,19 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
 
     @Override
     protected List<Resume> doCopyAll() {
-        return null;
-    }
-
-    @Override
-    public void clear() {
-
+        List<Resume> resumes = new ArrayList<>();
+        String[] list = directory.list();
+        if (list != null) {
+            for (String name : list) {
+                resumes.add(doRead(new File(name)));
+            }
+        }
+        return resumes;
     }
 
     @Override
     public int size() {
-        return 0;
+        return Objects.requireNonNull(directory.listFiles()).length;
     }
 
     protected abstract void doWrite(File file, Resume resume) throws IOException;
