@@ -8,7 +8,20 @@ import java.util.*;
 public class ResumeTestData {
 
     public static void main(String[] args) {
-        Resume resume = new Resume("uuid1", "Григорий Кислин");
+        Resume resume = getTestResume("uuid1", "Григорий Кислин");
+        System.out.println(resume.getFullName());
+
+        for (Map.Entry<ContactType, String> contactEntry : resume.getContacts().entrySet()) {
+            System.out.println(contactEntry.getKey().getTitle() + ": " + contactEntry.getValue());
+        }
+
+        for (Map.Entry<SectionType, Section> sectionEntry : resume.getSections().entrySet()) {
+            System.out.println(sectionEntry.getKey().getTitle() + ": " + sectionEntry.getValue());
+        }
+    }
+
+    public static Resume getTestResume(String uuid, String fullName) {
+        Resume resume = new Resume(uuid, fullName);
 
         // fill contacts
         Map<ContactType, String> contacts = resume.getContacts();
@@ -108,14 +121,6 @@ public class ResumeTestData {
                 ))
         );
 
-        System.out.println(resume.getFullName());
-
-        for (Map.Entry<ContactType, String> contactEntry : contacts.entrySet()) {
-            System.out.println(contactEntry.getKey().getTitle() + ": " + contactEntry.getValue());
-        }
-
-        for (Map.Entry<SectionType, Section> sectionEntry : sections.entrySet()) {
-            System.out.println(sectionEntry.getKey().getTitle() + ": " + sectionEntry.getValue());
-        }
+        return resume;
     }
 }
