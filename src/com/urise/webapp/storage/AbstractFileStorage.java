@@ -30,10 +30,13 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
     @Override
     public void clear() {
         File[] files = directory.listFiles();
-        if (files != null) {
-            for (File file : files) {
-                doDelete(file);
-            }
+
+        if (files == null) {
+            throw new StorageException("Not a directory or IO error", null);
+        }
+
+        for (File file : files) {
+            doDelete(file);
         }
     }
 
@@ -64,7 +67,9 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
 
     @Override
     protected void doDelete(File file) {
-        file.delete();
+        if (!file.delete()) {
+            throw new StorageException("IO error", null);
+        }
     }
 
     @Override
@@ -81,20 +86,30 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
     protected List<Resume> doCopyAll() {
         List<Resume> resumes = new ArrayList<>();
         File[] files = directory.listFiles();
-        if (files != null) {
-            for (File file : files) {
-                resumes.add(doRead(file));
-            }
+
+        if (files == null) {
+            throw new StorageException("Not a directory or IO error", null);
         }
+
+        for (File file : files) {
+            resumes.add(doGet(file));
+        }
+
         return resumes;
     }
 
     @Override
     public int size() {
-        return Objects.requireNonNull(directory.listFiles()).length;
+        File[] files = directory.listFiles();
+
+        if (files == null) {
+            throw new StorageException("Not a directory or IO error", null);
+        }
+
+        return files.length;
     }
 
     protected abstract void doWrite(File file, Resume resume) throws IOException;
 
-    protected abstract Resume doRead(File file);
+    protected abstract Resume doRead(File file) throws StorageException;
 }
