@@ -3,7 +3,9 @@ package com.urise.webapp;
 import com.urise.webapp.model.*;
 
 import java.time.LocalDate;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 public class ResumeTestData {
 
@@ -47,7 +49,7 @@ public class ResumeTestData {
 
         sections.put(
                 SectionType.ACHIEVEMENT,
-                new ListSection(List.of(
+                new ListSection(
                         "Организация команды и успешная реализация Java проектов для сторонних заказчиков: " +
                                 "приложения автопарк на стеке Spring Cloud/микросервисы, система мониторинга показателей " +
                                 "спортсменов на Spring Boot, участие в проекте МЭШ на Play-2, многомодульный Spring Boot " +
@@ -56,24 +58,23 @@ public class ResumeTestData {
                                 "\"Многомодульный maven. Многопоточность. XML (JAXB/StAX). Веб сервисы (JAX-RS/SOAP). " +
                                 "Удаленное взаимодействие (JMS/AKKA)\". Организация онлайн стажировок и ведение проектов. " +
                                 "Более 3500 выпускников."
-                ))
+                )
         );
 
         sections.put(
                 SectionType.QUALIFICATIONS,
-                new ListSection(List.of(
+                new ListSection(
                         "JEE AS: GlassFish (v2.1, v3), OC4J, JBoss, Tomcat, Jetty, WebLogic, WSO2",
                         "Version control: Subversion, Git, Mercury, ClearCase, Perforce"
-                ))
+                )
         );
 
         sections.put(
                 SectionType.EXPERIENCE,
-                new CompanySection(List.of(
+                new CompanySection(
                         new Company(
-                                "Java Online Projects",
-                                "https://javaops.ru/",
-                                new ArrayList<>(List.of(new Period(
+                                new Link("Java Online Projects", "https://javaops.ru/"),
+                                new ArrayList<>(List.of(new Company.Position(
                                         LocalDate.of(2013, 10, 1),
                                         LocalDate.now(),
                                         "Автор проекта",
@@ -81,9 +82,8 @@ public class ResumeTestData {
                                 )))
                         ),
                         new Company(
-                                "Wrike",
-                                "https://www.wrike.com/",
-                                new ArrayList<>(List.of(new Period(
+                                new Link("Wrike", "https://www.wrike.com/"),
+                                new ArrayList<>(List.of(new Company.Position(
                                         LocalDate.of(2014, 10, 1),
                                         LocalDate.of(2016, 1, 1),
                                         "Старший разработчик (backend)",
@@ -92,16 +92,15 @@ public class ResumeTestData {
                                                 "Двухфакторная аутентификация, авторизация по OAuth1, OAuth2, JWT SSO."
                                 )))
                         )
-                ))
+                )
         );
 
         sections.put(
                 SectionType.EDUCATION,
-                new CompanySection(List.of(
+                new CompanySection(
                         new Company(
-                                "Coursera",
-                                "https://www.coursera.org/course/progfun",
-                                new ArrayList<>(List.of(new Period(
+                                new Link("Coursera", "https://www.coursera.org/course/progfun"),
+                                new ArrayList<>(List.of(new Company.Position(
                                         LocalDate.of(2013, 3, 1),
                                         LocalDate.of(2013, 5, 1),
                                         "",
@@ -109,16 +108,15 @@ public class ResumeTestData {
                                 )))
                         ),
                         new Company(
-                                "Luxoft",
-                                "http://www.luxoft-training.ru/training/catalog/course.html?ID=22366",
-                                new ArrayList<>(List.of(new Period(
+                                new Link("Luxoft", "http://www.luxoft-training.ru/training/catalog/course.html?ID=22366"),
+                                new ArrayList<>(List.of(new Company.Position(
                                         LocalDate.of(2011, 3, 1),
                                         LocalDate.of(2011, 4, 1),
                                         "",
                                         "Курс 'Объектно-ориентированный анализ ИС. Концептуальное моделирование на UML.'"
                                 )))
                         )
-                ))
+                )
         );
 
         return resume;

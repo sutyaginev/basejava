@@ -8,11 +8,13 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.io.File;
 import java.util.Arrays;
 import java.util.List;
 
 abstract class AbstractStorageTest {
 
+    protected static final File STORAGE_DIR = new File("./storage");
     protected final Storage storage;
 
     private static final String UUID_1 = "uuid1";
@@ -20,16 +22,16 @@ abstract class AbstractStorageTest {
     private static final String UUID_3 = "uuid3";
     private static final String UUID_4 = "uuid4";
 
-    private static final Resume RESUME_1;
-    private static final Resume RESUME_2;
-    private static final Resume RESUME_3;
-    private static final Resume RESUME_4;
+    private static final Resume R1;
+    private static final Resume R2;
+    private static final Resume R3;
+    private static final Resume R4;
 
     static {
-        RESUME_1 = ResumeTestData.getTestResume(UUID_1, "Name1");
-        RESUME_2 = ResumeTestData.getTestResume(UUID_2, "Name2");
-        RESUME_3 = ResumeTestData.getTestResume(UUID_3, "Name3");
-        RESUME_4 = ResumeTestData.getTestResume(UUID_4, "Name4");
+        R1 = ResumeTestData.getTestResume(UUID_1, "Name1");
+        R2 = ResumeTestData.getTestResume(UUID_2, "Name2");
+        R3 = ResumeTestData.getTestResume(UUID_3, "Name3");
+        R4 = ResumeTestData.getTestResume(UUID_4, "Name4");
     }
 
     protected AbstractStorageTest(Storage storage) {
@@ -39,9 +41,9 @@ abstract class AbstractStorageTest {
     @BeforeEach
     public void setUp() throws Exception {
         storage.clear();
-        storage.save(RESUME_1);
-        storage.save(RESUME_2);
-        storage.save(RESUME_3);
+        storage.save(R1);
+        storage.save(R2);
+        storage.save(R3);
     }
 
     @Test
@@ -55,7 +57,7 @@ abstract class AbstractStorageTest {
     void update() {
         Resume newResume1 = new Resume(UUID_1, "New Name");
         storage.update(newResume1);
-        Assertions.assertSame(newResume1, storage.get(UUID_1));
+        Assertions.assertEquals(newResume1, storage.get(UUID_1));
     }
 
     @Test
@@ -67,15 +69,15 @@ abstract class AbstractStorageTest {
 
     @Test
     void save() {
-        storage.save(RESUME_4);
-        assertGet(RESUME_4);
+        storage.save(R4);
+        assertGet(R4);
         assertSize(4);
     }
 
     @Test
     void saveExist() {
         Assertions.assertThrows(ExistStorageException.class, () -> {
-            storage.save(RESUME_1);
+            storage.save(R1);
         });
     }
 
@@ -117,7 +119,7 @@ abstract class AbstractStorageTest {
     void getAllSorted() {
         List<Resume> list = storage.getAllSorted();
         Assertions.assertEquals(3, list.size());
-        Assertions.assertEquals(list, Arrays.asList(RESUME_1, RESUME_2, RESUME_3));
+        Assertions.assertEquals(list, Arrays.asList(R1, R2, R3));
     }
 
     @Test

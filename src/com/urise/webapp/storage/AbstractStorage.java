@@ -17,13 +17,13 @@ private static final Logger LOG = Logger.getLogger(AbstractStorage.class.getName
     public final void update(Resume resume) {
         LOG.info("Update " + resume);
         SK searchKey = getExistingSearchKey(resume.getUuid());
-        doUpdate(searchKey, resume);
+        doUpdate(resume, searchKey);
     }
 
     public final void save(Resume resume) {
         LOG.info("Save " + resume);
         SK searchKey = getNotExistingSearchKey(resume.getUuid());
-        doSave(searchKey, resume);
+        doSave(resume, searchKey);
     }
 
     public final Resume get(String uuid) {
@@ -68,9 +68,9 @@ private static final Logger LOG = Logger.getLogger(AbstractStorage.class.getName
         return resumes;
     }
 
-    protected abstract void doUpdate(SK searchKey, Resume resume);
+    protected abstract void doUpdate(Resume resume, SK searchKey);
 
-    protected abstract void doSave(SK searchKey, Resume resume);
+    protected abstract void doSave(Resume resume, SK searchKey);
 
     protected abstract Resume doGet(SK searchKey);
 

@@ -20,15 +20,15 @@ public abstract class AbstractArrayStorage extends AbstractStorage<Integer> {
         size = 0;
     }
 
-    public void doUpdate(Integer index, Resume resume) {
+    public void doUpdate(Resume resume, Integer index) {
         storage[index] = resume;
     }
 
-    public void doSave(Integer index, Resume resume) {
+    public void doSave(Resume resume, Integer index) {
         if (size >= STORAGE_LIMIT) {
             throw new StorageException("Storage overflow", resume.getUuid());
         } else {
-            insertElement(index, resume);
+            insertElement(resume, index);
             size++;
         }
     }
@@ -57,7 +57,7 @@ public abstract class AbstractArrayStorage extends AbstractStorage<Integer> {
         return searchKey >= 0;
     }
 
-    protected abstract void insertElement(int index, Resume resume);
+    protected abstract void insertElement(Resume resume, int index);
 
     protected abstract void fillDeletedElement(int index);
 }
