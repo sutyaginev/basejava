@@ -12,13 +12,16 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public abstract class AbstractPathStorage extends AbstractStorage<Path> {
+public class PathStorage extends AbstractStorage<Path> {
 
     private final Path directory;
+    private final Serializer serializer;
 
-    protected AbstractPathStorage(String dir) {
-        directory = Paths.get(dir);
+    protected PathStorage(String dir, Serializer serializer) {
         Objects.requireNonNull(dir, "directory must not be null");
+        Objects.requireNonNull(serializer, "serializer must not be null");
+        directory = Paths.get(dir);
+        this.serializer = serializer;
 
         if (!Files.isDirectory(directory) || !Files.isWritable(directory)) {
             throw new IllegalArgumentException(dir + " is not directory or is not writable");
@@ -96,7 +99,11 @@ public abstract class AbstractPathStorage extends AbstractStorage<Path> {
         }
     }
 
-    protected abstract void doWrite(Resume resume, OutputStream os) throws IOException;
+    protected void doWrite(Resume resume, OutputStream os) throws IOException {
+        serializer.doWrite(resume, os);
+    }
 
-    protected abstract Resume doRead(InputStream is) throws IOException;
+    protected Resume doRead(InputStream is) throws IOException {
+        return serializer.doRead(is);
+    }
 }
