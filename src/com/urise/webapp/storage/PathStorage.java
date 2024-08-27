@@ -2,6 +2,7 @@ package com.urise.webapp.storage;
 
 import com.urise.webapp.exception.StorageException;
 import com.urise.webapp.model.Resume;
+import com.urise.webapp.storage.serializer.Serializer;
 
 import java.io.*;
 import java.nio.file.Files;
@@ -47,7 +48,7 @@ public class PathStorage extends AbstractStorage<Path> {
         try {
             Files.createFile(path);
         } catch (IOException e) {
-            throw new StorageException("Couldn't create file " + path.getFileName(), path.getFileName().toString(), e);
+            throw new StorageException("Couldn't create file " + path.toAbsolutePath(), path.getFileName().toString(), e);
         }
         doUpdate(resume, path);
     }

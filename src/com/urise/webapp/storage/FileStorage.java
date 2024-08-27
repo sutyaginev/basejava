@@ -2,6 +2,7 @@ package com.urise.webapp.storage;
 
 import com.urise.webapp.exception.StorageException;
 import com.urise.webapp.model.Resume;
+import com.urise.webapp.storage.serializer.Serializer;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -32,10 +33,7 @@ public class FileStorage extends AbstractStorage<File> {
     @Override
     public void clear() {
         File[] files = directory.listFiles();
-
-        if (files == null) {
-            throw new StorageException("Directory read error", null);
-        }
+        throwNullFilesException(files);
 
         for (File file : files) {
             doDelete(file);
@@ -93,9 +91,7 @@ public class FileStorage extends AbstractStorage<File> {
         List<Resume> list = new ArrayList<>();
         File[] files = directory.listFiles();
 
-        if (files == null) {
-            throw new StorageException("Directory read error", null);
-        }
+        throwNullFilesException(files);
 
         for (File file : files) {
             list.add(doGet(file));
@@ -106,13 +102,15 @@ public class FileStorage extends AbstractStorage<File> {
 
     @Override
     public int size() {
-        String[] list = directory.list();
+        File[] files = directory.listFiles();
+        throwNullFilesException(files);
+        return files.length;
+    }
 
-        if (list == null) {
+    private void throwNullFilesException(File[] files) {
+        if (files == null) {
             throw new StorageException("Directory read error", null);
         }
-
-        return list.length;
     }
 
     protected void doWrite(Resume resume, OutputStream os) throws IOException {

@@ -30,6 +30,8 @@ public class MainFile {
             }
         }
 
+        printDirectoryDeeply(dir, "  ", 0);
+
 //        FileInputStream fis = null;
 //        try {
 //            fis = new FileInputStream(filePath);
@@ -51,5 +53,23 @@ public class MainFile {
 //        } catch (IOException e) {
 //            throw new RuntimeException(e);
 //        }
+    }
+
+    public static void printDirectoryDeeply(File dir, String tabSign, int count) {
+        File[] files = dir.listFiles();
+
+        if (files == null) {
+            return;
+        }
+
+        for (File file : files) {
+            if (file.isFile()) {
+                System.out.println(tabSign.repeat(count) + "\uD83D\uDDCE" + file.getName());
+            } else if (file.isDirectory()) {
+                System.out.println(tabSign.repeat(count) + "\uD83D\uDCC1" + file.getName());
+                count++;
+                printDirectoryDeeply(file, tabSign, count);
+            }
+        }
     }
 }
