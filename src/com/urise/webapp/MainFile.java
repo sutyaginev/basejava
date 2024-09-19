@@ -30,6 +30,7 @@ public class MainFile {
             }
         }
 
+        System.out.println(dir.getName() + ":");
         printDirectoryDeeply(dir, "  ", 0);
 
 //        FileInputStream fis = null;
@@ -64,11 +65,11 @@ public class MainFile {
 
         for (File file : files) {
             if (file.isFile()) {
-                System.out.println(tabSign.repeat(count) + "\uD83D\uDDCE" + file.getName());
+                System.out.println(tabSign + "\uD83D\uDDCE" + file.getName());
             } else if (file.isDirectory()) {
-                System.out.println(tabSign.repeat(count) + "\uD83D\uDCC1" + file.getName());
+                System.out.println(tabSign + "\uD83D\uDCC1" + file.getName());
                 count++;
-                printDirectoryDeeply(file, tabSign, count);
+                printDirectoryDeeply(file, tabSign + tabSign, count);
             }
         }
     }

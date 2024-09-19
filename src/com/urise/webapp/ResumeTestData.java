@@ -3,8 +3,7 @@ package com.urise.webapp;
 import com.urise.webapp.model.*;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Arrays;
 import java.util.Map;
 
 public class ResumeTestData {
@@ -74,23 +73,23 @@ public class ResumeTestData {
                 new CompanySection(
                         new Company(
                                 new Link("Java Online Projects", "https://javaops.ru/"),
-                                new ArrayList<>(List.of(new Company.Position(
+                                Arrays.asList(new Company.Position(
                                         LocalDate.of(2013, 10, 1),
                                         LocalDate.now(),
                                         "Автор проекта",
                                         "Создание, организация и проведение Java онлайн проектов и стажировок."
-                                )))
+                                ))
                         ),
                         new Company(
                                 new Link("Wrike", "https://www.wrike.com/"),
-                                new ArrayList<>(List.of(new Company.Position(
+                                Arrays.asList(new Company.Position(
                                         LocalDate.of(2014, 10, 1),
                                         LocalDate.of(2016, 1, 1),
                                         "Старший разработчик (backend)",
                                         "Проектирование и разработка онлайн платформы управления проектами Wrike " +
                                                 "(Java 8 API, Maven, Spring, MyBatis, Guava, Vaadin, PostgreSQL, Redis). " +
                                                 "Двухфакторная аутентификация, авторизация по OAuth1, OAuth2, JWT SSO."
-                                )))
+                                ))
                         )
                 )
         );
@@ -100,21 +99,21 @@ public class ResumeTestData {
                 new CompanySection(
                         new Company(
                                 new Link("Coursera", "https://www.coursera.org/course/progfun"),
-                                new ArrayList<>(List.of(new Company.Position(
+                                Arrays.asList(new Company.Position(
                                         LocalDate.of(2013, 3, 1),
                                         LocalDate.of(2013, 5, 1),
                                         "",
                                         "'Functional Programming Principles in Scala' by Martin Odersky"
-                                )))
+                                ))
                         ),
                         new Company(
                                 new Link("Luxoft", "http://www.luxoft-training.ru/training/catalog/course.html?ID=22366"),
-                                new ArrayList<>(List.of(new Company.Position(
+                                Arrays.asList(new Company.Position(
                                         LocalDate.of(2011, 3, 1),
                                         LocalDate.of(2011, 4, 1),
                                         "",
                                         "Курс 'Объектно-ориентированный анализ ИС. Концептуальное моделирование на UML.'"
-                                )))
+                                ))
                         )
                 )
         );

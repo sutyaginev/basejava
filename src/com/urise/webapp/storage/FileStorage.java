@@ -109,7 +109,7 @@ public class FileStorage extends AbstractStorage<File> {
 
     private void throwNullFilesException(File[] files) {
         if (files == null) {
-            throw new StorageException("Directory read error", null);
+            throw new StorageException("Directory read error");
         }
     }
 
