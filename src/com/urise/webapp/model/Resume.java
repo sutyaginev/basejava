@@ -13,7 +13,7 @@ import java.util.*;
 @XmlAccessorType(XmlAccessType.FIELD)
 public class Resume implements Comparable<Resume>, Serializable {
 
-private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
     // Unique identifier
     private String uuid;
@@ -49,14 +49,6 @@ private static final long serialVersionUID = 1L;
 
     public Map<SectionType, Section> getSections() {
         return sections;
-    }
-
-    public String getContact(ContactType type) {
-        return contacts.get(type);
-    }
-
-    public Section getSection(SectionType type) {
-        return sections.get(type);
     }
 
     public void addContact(ContactType type, String value) {

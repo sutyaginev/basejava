@@ -15,7 +15,7 @@ public class MainFile {
             throw new RuntimeException("Error", e);
         }
 
-        File dir = new File("./src/com/urise/webapp");
+        File dir = new File("./src/com/urise");
         System.out.println(dir.isDirectory());
         try {
             System.out.println(dir.getCanonicalPath());
@@ -30,8 +30,7 @@ public class MainFile {
             }
         }
 
-        System.out.println(dir.getName() + ":");
-        printDirectoryDeeply(dir, "  ", 0);
+        printDirectoryDeeply(dir, "");
 
 //        FileInputStream fis = null;
 //        try {
@@ -56,7 +55,7 @@ public class MainFile {
 //        }
     }
 
-    public static void printDirectoryDeeply(File dir, String tabSign, int count) {
+    public static void printDirectoryDeeply(File dir, String tabSign) {
         File[] files = dir.listFiles();
 
         if (files == null) {
@@ -68,8 +67,7 @@ public class MainFile {
                 System.out.println(tabSign + "\uD83D\uDDCE" + file.getName());
             } else if (file.isDirectory()) {
                 System.out.println(tabSign + "\uD83D\uDCC1" + file.getName());
-                count++;
-                printDirectoryDeeply(file, tabSign + tabSign, count);
+                printDirectoryDeeply(file, tabSign + "  ");
             }
         }
     }
