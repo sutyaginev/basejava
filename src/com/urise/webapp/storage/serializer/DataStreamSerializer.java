@@ -5,6 +5,7 @@ import com.urise.webapp.model.*;
 import java.io.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -41,20 +42,31 @@ public class DataStreamSerializer implements Serializer {
                     case ACHIEVEMENT:
                     case QUALIFICATIONS:
                         ListSection listSection = (ListSection) section;
-                        writeList(dos, listSection.getItems(), dos::writeUTF);
+                        writeCollection(dos, listSection.getItems(), dos::writeUTF);
                         break;
                     case EXPERIENCE:
                     case EDUCATION:
                         CompanySection companySection = (CompanySection) section;
-                        writeList(dos, companySection.getCompanies(), company -> {
+                        writeCollection(dos, companySection.getCompanies(), company -> {
                             dos.writeUTF(company.getHomePage().getName());
-                            dos.writeUTF(company.getHomePage().getUrl());
-                            writeList(dos, company.getPositions(), position -> {
+                            String url = company.getHomePage().getUrl();
+                            if (url == null) {
+                                dos.writeBoolean(true);
+                            } else {
+                                dos.writeBoolean(false);
+                                dos.writeUTF(url);
+                            }
+                            writeCollection(dos, company.getPositions(), position -> {
                                 dos.writeLong(position.getDateFrom().toEpochDay());
                                 dos.writeLong(position.getDateTo().toEpochDay());
                                 dos.writeUTF(position.getTitle());
-                                dos.writeUTF(position.getDescription());
-
+                                String description = position.getDescription();
+                                if (description == null) {
+                                    dos.writeBoolean(true);
+                                } else {
+                                    dos.writeBoolean(false);
+                                    dos.writeUTF(description);
+                                }
                             });
                         });
                         break;
@@ -97,9 +109,9 @@ public class DataStreamSerializer implements Serializer {
             case EXPERIENCE:
             case EDUCATION:
                 return new CompanySection(readList(dis, () ->
-                        new Company(new Link(dis.readUTF(), dis.readUTF()), readList(dis, () ->
+                        new Company(new Link(dis.readUTF(), /*dis.readUTF()*/dis.readBoolean() ? null : dis.readUTF()), readList(dis, () ->
                                 new Company.Position(LocalDate.ofEpochDay(dis.readLong()), LocalDate.ofEpochDay(dis.readLong()),
-                                        dis.readUTF(), dis.readUTF())
+                                        dis.readUTF(), /*dis.readUTF()*/dis.readBoolean() ? null : dis.readUTF())
                         ))
                 ));
             default:
@@ -107,9 +119,9 @@ public class DataStreamSerializer implements Serializer {
         }
     }
 
-    private <T> void writeList(DataOutputStream dos, List<T> list, ItemWriter<T> iw) throws IOException {
-        dos.writeInt(list.size());
-        for (T item : list) {
+    private <T> void writeCollection(DataOutputStream dos, Collection<T> collection, ItemWriter<T> iw) throws IOException {
+        dos.writeInt(collection.size());
+        for (T item : collection) {
             iw.write(item);
         }
     }

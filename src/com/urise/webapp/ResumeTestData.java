@@ -72,7 +72,7 @@ public class ResumeTestData {
                 SectionType.EXPERIENCE,
                 new CompanySection(
                         new Company(
-                                new Link("Java Online Projects", "https://javaops.ru/"),
+                                new Link("Java Online Projects", /*"https://javaops.ru/"*/null),
                                 Arrays.asList(new Company.Position(
                                         LocalDate.of(2013, 10, 1),
                                         LocalDate.now(),
@@ -86,9 +86,10 @@ public class ResumeTestData {
                                         LocalDate.of(2014, 10, 1),
                                         LocalDate.of(2016, 1, 1),
                                         "Старший разработчик (backend)",
-                                        "Проектирование и разработка онлайн платформы управления проектами Wrike " +
+                                        /*"Проектирование и разработка онлайн платформы управления проектами Wrike " +
                                                 "(Java 8 API, Maven, Spring, MyBatis, Guava, Vaadin, PostgreSQL, Redis). " +
-                                                "Двухфакторная аутентификация, авторизация по OAuth1, OAuth2, JWT SSO."
+                                                "Двухфакторная аутентификация, авторизация по OAuth1, OAuth2, JWT SSO."*/
+                                        null
                                 ))
                         )
                 )
