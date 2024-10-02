@@ -7,7 +7,6 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Map;
 
 public class DataStreamSerializer implements Serializer {
 
@@ -16,21 +15,15 @@ public class DataStreamSerializer implements Serializer {
         try (DataOutputStream dos = new DataOutputStream(os)) {
             dos.writeUTF(resume.getUuid());
             dos.writeUTF(resume.getFullName());
-            Map<ContactType, String> contacts = resume.getContacts();
-            dos.writeInt(contacts.size());
 
-            for (Map.Entry<ContactType, String> entry : contacts.entrySet()) {
+            writeCollection(dos, resume.getContacts().entrySet(), entry -> {
                 dos.writeUTF(entry.getKey().name());
                 dos.writeUTF(entry.getValue());
-            }
+            });
 
-            Map<SectionType, Section> sections = resume.getSections();
-            dos.writeInt(sections.size());
-
-            for (Map.Entry<SectionType, Section> entry : sections.entrySet()) {
+            writeCollection(dos, resume.getSections().entrySet(), entry -> {
                 SectionType sectionType = entry.getKey();
                 Section section = entry.getValue();
-
                 dos.writeUTF(sectionType.name());
 
                 switch (sectionType) {
@@ -71,7 +64,7 @@ public class DataStreamSerializer implements Serializer {
                         });
                         break;
                 }
-            }
+            });
         }
     }
 
@@ -109,9 +102,9 @@ public class DataStreamSerializer implements Serializer {
             case EXPERIENCE:
             case EDUCATION:
                 return new CompanySection(readList(dis, () ->
-                        new Company(new Link(dis.readUTF(), /*dis.readUTF()*/dis.readBoolean() ? null : dis.readUTF()), readList(dis, () ->
+                        new Company(new Link(dis.readUTF(), dis.readBoolean() ? null : dis.readUTF()), readList(dis, () ->
                                 new Company.Position(LocalDate.ofEpochDay(dis.readLong()), LocalDate.ofEpochDay(dis.readLong()),
-                                        dis.readUTF(), /*dis.readUTF()*/dis.readBoolean() ? null : dis.readUTF())
+                                        dis.readUTF(), dis.readBoolean() ? null : dis.readUTF())
                         ))
                 ));
             default:
