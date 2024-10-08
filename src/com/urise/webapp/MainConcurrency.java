@@ -6,7 +6,7 @@ import java.util.List;
 public class MainConcurrency {
 
     public static final int THREADS_NUMBER = 10000;
-    private static int counter;
+    private  int counter;
     private static final Object LOCK = new Object();
 
     public static void main(String[] args) throws InterruptedException {
@@ -47,7 +47,7 @@ public class MainConcurrency {
                 throw new RuntimeException(e);
             }
         });
-        System.out.println(counter);
+        System.out.println(mainConcurrency.counter);
     }
 
 /*    private static synchronized void inc() {
@@ -55,7 +55,7 @@ public class MainConcurrency {
         counter++;
     }*/
 
-    private synchronized void inc() {
+    private void inc() {
 //        synchronized (this) {
 //        synchronized (MainConcurrency.class) {
 
