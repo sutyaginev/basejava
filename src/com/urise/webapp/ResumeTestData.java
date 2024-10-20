@@ -1,9 +1,10 @@
 package com.urise.webapp;
 
-import com.urise.webapp.model.*;
+import com.urise.webapp.model.ContactType;
+import com.urise.webapp.model.Resume;
+import com.urise.webapp.model.Section;
+import com.urise.webapp.model.SectionType;
 
-import java.time.LocalDate;
-import java.util.Arrays;
 import java.util.Map;
 
 public class ResumeTestData {
@@ -24,6 +25,7 @@ public class ResumeTestData {
     public static Resume getTestResume(String uuid, String fullName) {
         Resume resume = new Resume(uuid, fullName);
 
+/*
         // fill contacts
         Map<ContactType, String> contacts = resume.getContacts();
         contacts.put(ContactType.PHONE, "+7(921) 855-0482");
@@ -72,7 +74,7 @@ public class ResumeTestData {
                 SectionType.EXPERIENCE,
                 new CompanySection(
                         new Company(
-                                new Link("Java Online Projects", /*"https://javaops.ru/"*/null),
+                                new Link("Java Online Projects", *//*"https://javaops.ru/"*//*null),
                                 Arrays.asList(new Company.Position(
                                         LocalDate.of(2013, 10, 1),
                                         LocalDate.now(),
@@ -86,9 +88,9 @@ public class ResumeTestData {
                                         LocalDate.of(2014, 10, 1),
                                         LocalDate.of(2016, 1, 1),
                                         "Старший разработчик (backend)",
-                                        /*"Проектирование и разработка онлайн платформы управления проектами Wrike " +
+                                        *//*"Проектирование и разработка онлайн платформы управления проектами Wrike " +
                                                 "(Java 8 API, Maven, Spring, MyBatis, Guava, Vaadin, PostgreSQL, Redis). " +
-                                                "Двухфакторная аутентификация, авторизация по OAuth1, OAuth2, JWT SSO."*/
+                                                "Двухфакторная аутентификация, авторизация по OAuth1, OAuth2, JWT SSO."*//*
                                         null
                                 ))
                         )
@@ -118,6 +120,7 @@ public class ResumeTestData {
                         )
                 )
         );
+        */
 
         return resume;
     }
