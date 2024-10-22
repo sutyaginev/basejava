@@ -32,7 +32,7 @@ public class SqlStorage implements Storage {
             ps.setString(2, resume.getUuid());
             int executeUpdate = ps.executeUpdate();
 
-            if (executeUpdate <= 0) {
+            if (executeUpdate == 0) {
                 throw new NotExistStorageException(resume.getUuid());
             }
 
@@ -69,7 +69,7 @@ public class SqlStorage implements Storage {
             ps.setString(1, uuid);
             int executeUpdate = ps.executeUpdate();
 
-            if (executeUpdate <= 0) {
+            if (executeUpdate == 0) {
                 throw new NotExistStorageException(uuid);
             }
 
@@ -95,12 +95,7 @@ public class SqlStorage implements Storage {
     public int size() {
         return sqlHelper.execute("SELECT COUNT(*) FROM resume", ps -> {
             ResultSet rs = ps.executeQuery();
-
-            if (rs.next()) {
-                return rs.getInt(1);
-            }
-
-            return 0;
+            return rs.next() ? rs.getInt(1) : 0;
         });
     }
 }
