@@ -19,10 +19,7 @@ public class SqlStorage implements Storage {
 
     @Override
     public void clear() {
-        sqlHelper.execute("DELETE FROM resume", ps -> {
-            ps.execute();
-            return null;
-        });
+        sqlHelper.execute("DELETE FROM resume");
     }
 
     @Override
@@ -30,9 +27,8 @@ public class SqlStorage implements Storage {
         sqlHelper.execute("UPDATE resume SET full_name = ? WHERE uuid = ?", ps -> {
             ps.setString(1, resume.getFullName());
             ps.setString(2, resume.getUuid());
-            int executeUpdate = ps.executeUpdate();
 
-            if (executeUpdate == 0) {
+            if (ps.executeUpdate() == 0) {
                 throw new NotExistStorageException(resume.getUuid());
             }
 
@@ -42,7 +38,7 @@ public class SqlStorage implements Storage {
 
     @Override
     public void save(Resume resume) {
-        sqlHelper.execute("INSERT INTO resume (uuid, full_name) VALUES (?, ?)", ps -> {
+        sqlHelper.<Void>execute("INSERT INTO resume (uuid, full_name) VALUES (?, ?)", ps -> {
             ps.setString(1, resume.getUuid());
             ps.setString(2, resume.getFullName());
             ps.execute();
@@ -67,9 +63,8 @@ public class SqlStorage implements Storage {
     public void delete(String uuid) {
         sqlHelper.execute("DELETE FROM resume WHERE uuid = ?", ps -> {
             ps.setString(1, uuid);
-            int executeUpdate = ps.executeUpdate();
 
-            if (executeUpdate == 0) {
+            if (ps.executeUpdate() == 0) {
                 throw new NotExistStorageException(uuid);
             }
 
@@ -79,15 +74,15 @@ public class SqlStorage implements Storage {
 
     @Override
     public List<Resume> getAllSorted() {
-        return sqlHelper.execute("SELECT * FROM resume order by full_name, uuid", ps -> {
-            ResultSet resultSet = ps.executeQuery();
-            List<Resume> list = new ArrayList<>();
+        return sqlHelper.execute("SELECT * FROM resume ORDER BY full_name, uuid", ps -> {
+            ResultSet rs = ps.executeQuery();
+            List<Resume> resumes = new ArrayList<>();
 
-            while (resultSet.next()) {
-                list.add(new Resume(resultSet.getString("uuid").trim(), resultSet.getString("full_name")));
+            while (rs.next()) {
+                resumes.add(new Resume(rs.getString("uuid"), rs.getString("full_name")));
             }
 
-            return list;
+            return resumes;
         });
     }
 
