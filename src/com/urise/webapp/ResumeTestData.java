@@ -25,7 +25,6 @@ public class ResumeTestData {
     public static Resume getTestResume(String uuid, String fullName) {
         Resume resume = new Resume(uuid, fullName);
 
-/*
         // fill contacts
         Map<ContactType, String> contacts = resume.getContacts();
         contacts.put(ContactType.PHONE, "+7(921) 855-0482");
@@ -36,6 +35,7 @@ public class ResumeTestData {
         contacts.put(ContactType.STACKOVERFLOW, "https://stackoverflow.com/users/548473");
         contacts.put(ContactType.HOMEPAGE, "http://gkislin.ru/");
 
+/*
         // fill sections
         Map<SectionType, Section> sections = resume.getSections();
         sections.put(
@@ -74,7 +74,9 @@ public class ResumeTestData {
                 SectionType.EXPERIENCE,
                 new CompanySection(
                         new Company(
-                                new Link("Java Online Projects", *//*"https://javaops.ru/"*//*null),
+                                new Link("Java Online Projects", */
+/*"https://javaops.ru/"*//*
+null),
                                 Arrays.asList(new Company.Position(
                                         LocalDate.of(2013, 10, 1),
                                         LocalDate.now(),
@@ -88,9 +90,11 @@ public class ResumeTestData {
                                         LocalDate.of(2014, 10, 1),
                                         LocalDate.of(2016, 1, 1),
                                         "Старший разработчик (backend)",
-                                        *//*"Проектирование и разработка онлайн платформы управления проектами Wrike " +
+                                        */
+/*"Проектирование и разработка онлайн платформы управления проектами Wrike " +
                                                 "(Java 8 API, Maven, Spring, MyBatis, Guava, Vaadin, PostgreSQL, Redis). " +
                                                 "Двухфакторная аутентификация, авторизация по OAuth1, OAuth2, JWT SSO."*//*
+
                                         null
                                 ))
                         )
@@ -120,7 +124,7 @@ public class ResumeTestData {
                         )
                 )
         );
-        */
+*/
 
         return resume;
     }
