@@ -4,6 +4,7 @@ import com.urise.webapp.Config;
 import com.urise.webapp.ResumeTestData;
 import com.urise.webapp.exception.ExistStorageException;
 import com.urise.webapp.exception.NotExistStorageException;
+import com.urise.webapp.model.ContactType;
 import com.urise.webapp.model.Resume;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -58,6 +59,9 @@ abstract class AbstractStorageTest {
     @Test
     void update() {
         Resume newResume1 = new Resume(UUID_1, "New Name");
+        R1.addContact(ContactType.EMAIL, "gkislin@google.com");
+        R1.addContact(ContactType.SKYPE, "NewSkype");
+        R1.addContact(ContactType.PHONE, "+7 921 222-22-22");
         storage.update(newResume1);
         Assertions.assertEquals(newResume1, storage.get(UUID_1));
     }

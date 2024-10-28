@@ -34,12 +34,7 @@ public class SqlStorage implements Storage {
                 }
             }
 
-            try (PreparedStatement ps = connection.prepareStatement(
-                    "DELETE FROM contact WHERE resume_uuid = ?")) {
-                ps.setString(1, resume.getUuid());
-                ps.execute();
-            }
-
+            deleteContacts(resume, connection);
             insertContacts(resume, connection);
 
             return null;
@@ -135,6 +130,14 @@ public class SqlStorage implements Storage {
         if (value != null) {
             ContactType type = ContactType.valueOf(rs.getString("type"));
             resume.addContact(type, value);
+        }
+    }
+
+    private static void deleteContacts(Resume resume, Connection connection) throws SQLException {
+        try (PreparedStatement ps = connection.prepareStatement(
+                "DELETE FROM contact WHERE resume_uuid = ?")) {
+            ps.setString(1, resume.getUuid());
+            ps.execute();
         }
     }
 
