@@ -34,11 +34,11 @@ public class SqlStorage implements Storage {
                 }
             }
 
-            sqlHelper.execute("DELETE FROM contact WHERE resume_uuid = ?", ps -> {
+            try (PreparedStatement ps = connection.prepareStatement(
+                    "DELETE FROM contact WHERE resume_uuid = ?")) {
                 ps.setString(1, resume.getUuid());
                 ps.execute();
-                return null;
-            });
+            }
 
             insertContacts(resume, connection);
 
