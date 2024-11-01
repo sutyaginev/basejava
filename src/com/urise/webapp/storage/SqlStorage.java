@@ -39,7 +39,6 @@ public class SqlStorage implements Storage {
 
             return null;
         });
-
     }
 
     @Override
@@ -96,24 +95,33 @@ public class SqlStorage implements Storage {
 
     @Override
     public List<Resume> getAllSorted() {
-        return sqlHelper.execute(
-                "SELECT * FROM resume r " +
-                        "LEFT JOIN contact c " +
-                        "ON r.uuid = c.resume_uuid " +
-                        "ORDER BY r.full_name, r.uuid", ps -> {
-                    ResultSet rs = ps.executeQuery();
-                    Map<String, Resume> resumes = new LinkedHashMap<>();
+        Map<String, Resume> resumes = new LinkedHashMap<>();
 
-                    while (rs.next()) {
-                        String uuid = rs.getString("uuid");
-                        String fullName = rs.getString("full_name");
-                        Resume resume = resumes.computeIfAbsent(uuid, id -> new Resume(id, fullName));
+        sqlHelper.transactionalExecute(connection -> {
+            try (PreparedStatement ps = connection.prepareStatement(
+                    "SELECT * FROM resume ORDER BY full_name, uuid")) {
+                ResultSet rs = ps.executeQuery();
 
-                        addContact(rs, resume);
-                    }
+                while (rs.next()) {
+                    String uuid = rs.getString("uuid");
+                    resumes.put(uuid, new Resume(uuid, rs.getString("full_name")));
+                }
+            }
 
-                    return new ArrayList<>(resumes.values());
-                });
+            try (PreparedStatement ps = connection.prepareStatement(
+                    "SELECT * FROM contact")) {
+                ResultSet rs = ps.executeQuery();
+
+                while (rs.next()) {
+                    Resume resume = resumes.get(rs.getString("resume_uuid"));
+                    addContact(rs, resume);
+                }
+            }
+
+            return null;
+        });
+
+        return new ArrayList<>(resumes.values());
     }
 
     @Override
