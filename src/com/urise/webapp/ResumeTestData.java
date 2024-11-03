@@ -1,9 +1,6 @@
 package com.urise.webapp;
 
-import com.urise.webapp.model.ContactType;
-import com.urise.webapp.model.Resume;
-import com.urise.webapp.model.Section;
-import com.urise.webapp.model.SectionType;
+import com.urise.webapp.model.*;
 
 import java.util.Map;
 
@@ -35,7 +32,6 @@ public class ResumeTestData {
         contacts.put(ContactType.STACKOVERFLOW, "https://stackoverflow.com/users/548473");
         contacts.put(ContactType.HOMEPAGE, "http://gkislin.ru/");
 
-/*
         // fill sections
         Map<SectionType, Section> sections = resume.getSections();
         sections.put(
@@ -70,6 +66,7 @@ public class ResumeTestData {
                 )
         );
 
+/*
         sections.put(
                 SectionType.EXPERIENCE,
                 new CompanySection(
