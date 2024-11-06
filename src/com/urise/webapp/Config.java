@@ -4,21 +4,21 @@ import com.urise.webapp.storage.SqlStorage;
 import com.urise.webapp.storage.Storage;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
 import java.util.Properties;
 
 public class Config {
 
-    private static final File PROPS = new File("./config/resumes.properties");
+    private static final File PROPS = new File(getParentDir(), "/config/resumes.properties");
     private static final Properties props = new Properties();
     private static final Config INSTANCE = new Config();
-    private static File storageDir;
-    private static Storage storage;
+    private final File storageDir;
+    private final Storage storage;
 
     private Config() {
-        try (InputStream is = new FileInputStream(PROPS)) {
+        try (InputStream is = Files.newInputStream(PROPS.toPath())) {
             props.load(is);
             storageDir = new File(props.getProperty("storage.dir"));
             storage = new SqlStorage(props.getProperty("db.url"), props.getProperty("db.user"), props.getProperty("db.password"));
@@ -35,7 +35,12 @@ public class Config {
         return storageDir;
     }
 
-    public static Storage getStorage() {
+    public Storage getStorage() {
         return storage;
+    }
+
+    private static File getParentDir() {
+        String projectDir = System.getProperty("projectDir");
+        return new File(projectDir == null ? "." : projectDir);
     }
 }
