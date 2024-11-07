@@ -177,17 +177,20 @@ public class SqlStorage implements Storage {
 
     private void addSection(ResultSet rs, Resume resume) throws SQLException {
         String value = rs.getString("value");
-        SectionType type = SectionType.valueOf(rs.getString("type"));
 
-        switch (type) {
-            case OBJECTIVE:
-            case PERSONAL:
-                resume.addSection(type, new TextSection(value));
-                break;
-            case ACHIEVEMENT:
-            case QUALIFICATIONS:
-                resume.addSection(type, new ListSection(new ArrayList<>(Arrays.asList(value.split("\n")))));
-                break;
+        if (value != null) {
+            SectionType type = SectionType.valueOf(rs.getString("type"));
+
+            switch (type) {
+                case OBJECTIVE:
+                case PERSONAL:
+                    resume.addSection(type, new TextSection(value));
+                    break;
+                case ACHIEVEMENT:
+                case QUALIFICATIONS:
+                    resume.addSection(type, new ListSection(new ArrayList<>(Arrays.asList(value.split("\n")))));
+                    break;
+            }
         }
     }
 
@@ -225,7 +228,6 @@ public class SqlStorage implements Storage {
                 "INSERT INTO section (resume_uuid, type, value) VALUES (?, ?, ?)")) {
             for (Map.Entry<SectionType, Section> e : resume.getSections().entrySet()) {
                 SectionType sectionType = e.getKey();
-                String type = sectionType.name();
                 String value = getSectionValue(sectionType, e.getValue());
 
                 ps.setString(1, resume.getUuid());
@@ -239,21 +241,16 @@ public class SqlStorage implements Storage {
     }
 
     private static String getSectionValue(SectionType type, Section section) {
-        StringBuilder sb = new StringBuilder();
 
         switch (type) {
             case OBJECTIVE:
             case PERSONAL:
-                sb.append(((TextSection) section).getContent());
-                break;
+                return ((TextSection) section).getContent();
             case ACHIEVEMENT:
             case QUALIFICATIONS:
-                for (String item : ((ListSection) section).getItems()) {
-                    sb.append(item).append("\n");
-                }
-                break;
+                return String.join("\n", ((ListSection) section).getItems());
         }
 
-        return sb.toString();
+        return null;
     }
 }
