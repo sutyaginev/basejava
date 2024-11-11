@@ -195,16 +195,15 @@ public class SqlStorage implements Storage {
     }
 
     private static void deleteContacts(Resume resume, Connection connection) throws SQLException {
-        try (PreparedStatement ps = connection.prepareStatement(
-                "DELETE FROM contact WHERE resume_uuid = ?")) {
-            ps.setString(1, resume.getUuid());
-            ps.execute();
-        }
+        deleteAttributes(resume, connection, "DELETE FROM contact WHERE resume_uuid = ?");
     }
 
     private static void deleteSections(Resume resume, Connection connection) throws SQLException {
-        try (PreparedStatement ps = connection.prepareStatement(
-                "DELETE FROM section WHERE resume_uuid = ?")) {
+        deleteAttributes(resume, connection, "DELETE FROM section WHERE resume_uuid = ?");
+    }
+
+    private static void deleteAttributes(Resume resume, Connection connection, String sql) throws SQLException {
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setString(1, resume.getUuid());
             ps.execute();
         }
