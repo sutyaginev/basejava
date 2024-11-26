@@ -1,6 +1,8 @@
 <%@ page import="com.urise.webapp.model.ContactType" %>
+<%@ page import="com.urise.webapp.model.SectionType" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 
 <html>
 <head>
@@ -19,19 +21,50 @@
             <dd><input type="text" name="fullName" size=50 value="${resume.fullName}"></dd>
         </dl>
         <h3>Контакты:</h3>
-        <c:forEach var="type" items="<%=ContactType.values()%>">
+        <c:forEach var="contactType" items="<%=ContactType.values()%>">
             <dl>
-                <dt>${type.title}</dt>
-                <dd><input type="text" name="${type.name()}" size=30 value="${resume.getContact(type)}"></dd>
+                <dt>${contactType.title}</dt>
+                <dd><input type="text" name="${contactType.name()}" size=30 value="${resume.getContact(contactType)}">
+                </dd>
             </dl>
         </c:forEach>
         <h3>Секции:</h3>
+        <c:forEach var="sectionType" items="<%=SectionType.values()%>">
+            <c:set var="section" value="${resume.getSection(sectionType)}"/>
+            <dl>
+                <c:choose>
+                    <c:when test="${sectionType == 'OBJECTIVE' || sectionType == 'PERSONAL'}">
+                        <dt>${sectionType.title}</dt>
+                        <dd>
+                            <textarea id="textSection" name="${sectionType.name()}" rows="1"
+                                      cols="150">${fn:trim(section.content)}</textarea>
+                        </dd>
+                    </c:when>
+
+                    <c:when test="${sectionType == 'ACHIEVEMENT' || sectionType == 'QUALIFICATIONS'}">
+                        <c:set var="list" value=""/>
+                        <c:forEach var="item" items="${section.items}" varStatus="loop">
+                            <c:set var="list" value="${list}${fn:trim(item)}"/>
+                            <c:if test="${!loop.last}">
+                                <c:set var="list" value="${list}&#x000A;"/>
+                            </c:if>
+                        </c:forEach>
+                        <dt>${sectionType.title}</dt>
+                        <dd>
+                            <textarea id="listSection" name="${sectionType.name()}" rows="10"
+                                      cols="150">${list}</textarea>
+                        </dd>
+                    </c:when>
+                </c:choose>
+            </dl>
+        </c:forEach>
+
         <input type="text" name="section" size=30 value="1"><br/>
         <input type="text" name="section" size=30 value="2"><br/>
         <input type="text" name="section" size=30 value="3"><br/>
         <hr>
         <button type="submit">Сохранить</button>
-        <button onclick="window.history.back()">Отменить</button>
+        <button type="reset" onclick="window.history.back()">Отменить</button>
     </form>
 </section>
 <jsp:include page="fragments/footer.jsp"/>

@@ -1,5 +1,8 @@
+<%@ page import="com.urise.webapp.model.TextSection" %>
+<%@ page import="com.urise.webapp.model.ListSection" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 
 <html>
 <head>
@@ -16,9 +19,38 @@
         <c:forEach var="contactEntry" items="${resume.contacts}">
             <jsp:useBean id="contactEntry"
                          type="java.util.Map.Entry<com.urise.webapp.model.ContactType, java.lang.String>"/>
-                <%=contactEntry.getKey().toHtml(contactEntry.getValue())%><br/>
+            <%=contactEntry.getKey().toHtml(contactEntry.getValue())%><br/>
         </c:forEach>
-    <p>
+    </p>
+
+    <c:forEach var="sectionEntry" items="${resume.sections}">
+        <jsp:useBean id="sectionEntry"
+                     type="java.util.Map.Entry<com.urise.webapp.model.SectionType, com.urise.webapp.model.Section>"/>
+        <c:set var="sectionType" value="${sectionEntry.key}"/>
+        <c:set var="section" value="${sectionEntry.value}"/>
+
+        <c:if test="${section != null}">
+            <c:choose>
+                <c:when test="${sectionType == 'OBJECTIVE' || sectionType == 'PERSONAL'}">
+                    <c:set var="content" value="${section.content}"/>
+
+                    <h3>${sectionType.title}:</h3>
+                    ${content}
+                </c:when>
+
+                <c:when test="${sectionType == 'ACHIEVEMENT' || sectionType == 'QUALIFICATIONS'}">
+                    <c:set var="items" value="${section.items}"/>
+                    <h3>${sectionType.title}:</h3>
+                    <c:forEach var="item" items="${items}">
+                        <c:if test="${not empty fn:trim(item)}">
+                            <li>${item}</li>
+                        </c:if>
+                    </c:forEach>
+                </c:when>
+            </c:choose>
+        </c:if>
+    </c:forEach>
+
 </section>
 <jsp:include page="fragments/footer.jsp"/>
 </body>

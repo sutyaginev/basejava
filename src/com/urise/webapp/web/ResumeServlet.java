@@ -3,7 +3,9 @@ package com.urise.webapp.web;
 import com.urise.webapp.Config;
 import com.urise.webapp.model.ContactType;
 import com.urise.webapp.model.Resume;
+import com.urise.webapp.model.SectionType;
 import com.urise.webapp.storage.Storage;
+import com.urise.webapp.util.ResumeUtil;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -11,6 +13,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.UUID;
 
 public class ResumeServlet extends HttpServlet {
 
@@ -42,7 +45,14 @@ public class ResumeServlet extends HttpServlet {
                 return;
             case "view":
             case "edit":
-                resume = storage.get(uuid);
+                if (uuid != null && !uuid.isEmpty()) {
+                    resume = storage.get(uuid);
+                } else {
+                    resume = new Resume(UUID.randomUUID().toString(), "RandomName");
+                    storage.save(resume);
+                    storage.get(resume.getUuid());
+                }
+
                 break;
             default:
                 throw new IllegalArgumentException("Action" + action + " is illegal");
@@ -59,7 +69,10 @@ public class ResumeServlet extends HttpServlet {
         String uuid = request.getParameter("uuid");
         String fullName = request.getParameter("fullName");
         Resume resume = storage.get(uuid);
-        resume.setFullName(fullName);
+        if (fullName != null && !fullName.trim().isEmpty()) {
+            resume.setFullName(fullName);
+        }
+
 
         for (ContactType type : ContactType.values()) {
             String value = request.getParameter(type.name());
@@ -68,6 +81,16 @@ public class ResumeServlet extends HttpServlet {
                 resume.addContact(type, value);
             } else {
                 resume.getContacts().remove(type);
+            }
+        }
+
+        for (SectionType type : SectionType.values()) {
+            String value = request.getParameter(type.name());
+
+            if (value != null && !value.trim().isEmpty()) {
+                ResumeUtil.addSection(resume, type, value);
+            } else {
+                resume.getSections().remove(type);
             }
         }
 

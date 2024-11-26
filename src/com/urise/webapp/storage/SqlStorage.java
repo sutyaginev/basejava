@@ -3,9 +3,13 @@ package com.urise.webapp.storage;
 import com.urise.webapp.exception.NotExistStorageException;
 import com.urise.webapp.model.*;
 import com.urise.webapp.sql.SqlHelper;
+import com.urise.webapp.util.ResumeUtil;
 
 import java.sql.*;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 public class SqlStorage implements Storage {
 
@@ -181,16 +185,7 @@ public class SqlStorage implements Storage {
         if (value != null) {
             SectionType type = SectionType.valueOf(rs.getString("type"));
 
-            switch (type) {
-                case OBJECTIVE:
-                case PERSONAL:
-                    resume.addSection(type, new TextSection(value));
-                    break;
-                case ACHIEVEMENT:
-                case QUALIFICATIONS:
-                    resume.addSection(type, new ListSection(new ArrayList<>(Arrays.asList(value.split("\n")))));
-                    break;
-            }
+            ResumeUtil.addSection(resume, type, value);
         }
     }
 
