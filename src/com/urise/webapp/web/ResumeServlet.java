@@ -13,7 +13,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.UUID;
 
 public class ResumeServlet extends HttpServlet {
 
@@ -45,15 +44,12 @@ public class ResumeServlet extends HttpServlet {
                 return;
             case "view":
             case "edit":
-                if (uuid != null && !uuid.isEmpty()) {
-                    resume = storage.get(uuid);
-                } else {
-                    resume = new Resume(UUID.randomUUID().toString(), "RandomName");
-                    storage.save(resume);
-                    storage.get(resume.getUuid());
-                }
-
+                resume = storage.get(uuid);
                 break;
+            case "add":
+                resume = new Resume();
+                break;
+
             default:
                 throw new IllegalArgumentException("Action" + action + " is illegal");
         }
@@ -68,11 +64,15 @@ public class ResumeServlet extends HttpServlet {
         request.setCharacterEncoding("UTF-8");
         String uuid = request.getParameter("uuid");
         String fullName = request.getParameter("fullName");
-        Resume resume = storage.get(uuid);
-        if (fullName != null && !fullName.trim().isEmpty()) {
+        Resume resume;
+
+        if (uuid == null || uuid.isEmpty()) {
+            resume = new Resume(fullName);
+            storage.save(resume);
+        } else {
+            resume = storage.get(uuid);
             resume.setFullName(fullName);
         }
-
 
         for (ContactType type : ContactType.values()) {
             String value = request.getParameter(type.name());

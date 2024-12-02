@@ -18,7 +18,8 @@
         <input type="hidden" name="uuid" value="${resume.uuid}">
         <dl>
             <dt>Имя:</dt>
-            <dd><input type="text" name="fullName" size=50 value="${resume.fullName}"></dd>
+            <dd><input type="text" name="fullName" size=50 value="${resume.fullName}" pattern=".*\S.*"
+                       title="Поле не должно быть пустым или содержать только пробелы." required></dd>
         </dl>
         <h3>Контакты:</h3>
         <c:forEach var="contactType" items="<%=ContactType.values()%>">
@@ -58,10 +59,6 @@
                 </c:choose>
             </dl>
         </c:forEach>
-
-        <input type="text" name="section" size=30 value="1"><br/>
-        <input type="text" name="section" size=30 value="2"><br/>
-        <input type="text" name="section" size=30 value="3"><br/>
         <hr>
         <button type="submit">Сохранить</button>
         <button type="reset" onclick="window.history.back()">Отменить</button>
