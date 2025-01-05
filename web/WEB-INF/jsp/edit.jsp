@@ -1,5 +1,6 @@
 <%@ page import="com.urise.webapp.model.ContactType" %>
 <%@ page import="com.urise.webapp.model.SectionType" %>
+<%@ page import="com.urise.webapp.model.CompanySection" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
@@ -11,10 +12,12 @@
     <jsp:useBean id="resume" type="com.urise.webapp.model.Resume" scope="request"/>
     <title>Резюме ${resume.fullName}</title>
 </head>
+
 <body>
 <jsp:include page="fragments/header.jsp"/>
 <section>
-    <form method="post" action="resume" enctype="application/x-www-form-urlencoded">
+    <form method="post" action="resume" enctype="application/x-www-form-urlencoded"
+          onsubmit="return validateDates(this);">
         <input type="hidden" name="uuid" value="${resume.uuid}">
         <dl>
             <dt>Имя:</dt>
@@ -55,6 +58,59 @@
                             <textarea id="listSection" name="${sectionType.name()}" rows="10"
                                       cols="150">${list}</textarea>
                         </dd>
+                    </c:when>
+
+                    <c:when test="${sectionType == 'EXPERIENCE' || sectionType == 'EDUCATION'}">
+                        <dt>${sectionType.title}</dt>
+                        <c:forEach var="company" items="${section.companies}"
+                                   varStatus="counter">
+                            <div style="margin-left: 30px">
+                                <dl>
+                                    <dt>Компания:</dt>
+                                    <dd><input type="text" name='${sectionType}' size=100
+                                               value="${company.homePage.name}">
+                                    </dd>
+                                </dl>
+
+                                <dl>
+                                    <dt>Сайт компании:</dt>
+                                    <dd><input type="text" name='${sectionType}url' size=100
+                                               value="${company.homePage.url}"></dd>
+                                </dl>
+                                <br>
+
+                                <c:forEach var="position" items="${company.positions}">
+                                    <jsp:useBean id="position" type="com.urise.webapp.model.Company.Position"/>
+                                    <div style="margin-left: 30px">
+                                        <dl>
+                                            <dt>Дата начала:</dt>
+                                            <dd>
+                                                <input type="date" name="${sectionType}${counter.index}dateFrom" size=10
+                                                       value="${position.dateFrom}" placeholder="yyyy-MM-dd">
+                                            </dd>
+                                        </dl>
+                                        <dl>
+                                            <dt>Дата окончания:</dt>
+                                            <dd>
+                                                <input type="date" name="${sectionType}${counter.index}dateTo" size=10
+                                                       value="${position.dateTo}" placeholder="yyyy-MM-dd">
+                                            </dd>
+                                        </dl>
+                                        <dl>
+                                            <dt>Должность:</dt>
+                                            <dd><input type="text" name='${sectionType}${counter.index}title' size=75
+                                                       value="${position.title}">
+                                            </dd>
+                                        </dl>
+                                        <dl>
+                                            <dt>Описание:</dt>
+                                            <dd><textarea name="${sectionType}${counter.index}description" rows=5
+                                                          cols=75>${position.description}</textarea></dd>
+                                        </dl>
+                                    </div>
+                                </c:forEach>
+                            </div>
+                        </c:forEach>
                     </c:when>
                 </c:choose>
             </dl>

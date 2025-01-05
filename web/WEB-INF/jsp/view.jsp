@@ -1,5 +1,7 @@
 <%@ page import="com.urise.webapp.model.TextSection" %>
 <%@ page import="com.urise.webapp.model.ListSection" %>
+<%@ page import="com.urise.webapp.util.ResumeUtil" %>
+<%@ page import="com.urise.webapp.util.DateUtil" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
@@ -33,7 +35,6 @@
             <c:choose>
                 <c:when test="${sectionType == 'OBJECTIVE' || sectionType == 'PERSONAL'}">
                     <c:set var="content" value="${section.content}"/>
-
                     <h3>${sectionType.title}:</h3>
                     ${content}
                 </c:when>
@@ -45,6 +46,38 @@
                         <c:if test="${not empty fn:trim(item)}">
                             <li>${item}</li>
                         </c:if>
+                    </c:forEach>
+                </c:when>
+
+                <c:when test="${sectionType == 'EXPERIENCE' || sectionType == 'EDUCATION'}">
+                    <jsp:useBean id="section" type="com.urise.webapp.model.CompanySection"/>
+                    <c:set var="companies" value="${section.companies}"/>
+                    <h3>${sectionType.title}:</h3>
+                    <c:forEach var="company" items="${companies}">
+                        <c:if test="${not empty company.homePage.name}">
+                            <c:choose>
+                                <c:when test="${empty company.homePage.url}">
+                                    <li><b>${company.homePage.name}</b></li>
+                                </c:when>
+                                <c:otherwise>
+                                    <li><b><a href="${company.homePage.url}">${company.homePage.name}</a></b></li>
+                                </c:otherwise>
+                            </c:choose>
+                        </c:if>
+
+                        <c:forEach var="position" items="${company.positions}">
+                            <jsp:useBean id="position" type="com.urise.webapp.model.Company.Position"/>
+                            <div style="margin-left: 20px">
+                                <c:if test="${not empty position.title}">
+                                    <%=DateUtil.formatDate(position.getDateFrom())%> - <%=DateUtil.formatDate(position.getDateTo())%> : ${position.title}
+                                    <br>
+                                </c:if>
+
+                                <c:if test="${not empty position.description}">
+                                    ${position.description}
+                                </c:if>
+                            </div>
+                        </c:forEach>
                     </c:forEach>
                 </c:when>
             </c:choose>

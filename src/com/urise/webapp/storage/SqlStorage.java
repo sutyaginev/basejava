@@ -243,6 +243,9 @@ public class SqlStorage implements Storage {
             case ACHIEVEMENT:
             case QUALIFICATIONS:
                 return String.join("\n", ((ListSection) section).getItems());
+            case EXPERIENCE:
+            case EDUCATION:
+                return String.join("\n", ResumeUtil.formatCompaniesToString(((CompanySection) section).getCompanies()));
         }
 
         return null;
