@@ -74,7 +74,7 @@ public class ResumeTestData {
                         new Company(
                                 new Link("Java Online Projects",
 //"https://javaops.ru/"
-null),
+                                        null),
                                 Arrays.asList(new Company.Position(
                                         LocalDate.of(2013, 10, 1),
                                         LocalDate.now(),

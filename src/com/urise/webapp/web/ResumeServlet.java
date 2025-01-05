@@ -144,10 +144,6 @@ public class ResumeServlet extends HttpServlet {
                     break;
                 case EDUCATION:
                 case EXPERIENCE:
-//                    if (values.length < 2) {
-//                        resume.getSections().remove(type);
-//                        continue;
-//                    }
 
                     List<Company> companies = new ArrayList<>();
                     String[] urls = request.getParameterValues(type.name() + "url");
