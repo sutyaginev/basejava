@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class ResumeServlet extends HttpServlet {
@@ -140,7 +141,9 @@ public class ResumeServlet extends HttpServlet {
                     break;
                 case ACHIEVEMENT:
                 case QUALIFICATIONS:
-                    resume.getSections().put(type, new ListSection(value.split("\n")));
+                    resume.getSections().put(type, new ListSection(Arrays.stream(value.split("\n"))
+                            .filter(str -> !ResumeUtil.isEmpty(str))
+                            .toArray(String[]::new)));
                     break;
                 case EDUCATION:
                 case EXPERIENCE:
